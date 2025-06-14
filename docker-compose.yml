@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: conecta-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: conecta
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/setup-db.sql:/docker-entrypoint-initdb.d/setup-db.sql
+    restart: unless-stopped
+    networks:
+      - conecta-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: conecta-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_DATABASE=conecta
+      - JWT_SECRET=your-super-secret-key-change-in-production
+      - NODE_ENV=production
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - conecta-network
+
+networks:
+  conecta-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
