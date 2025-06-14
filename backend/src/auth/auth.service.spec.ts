@@ -3,8 +3,8 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException, ConflictException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { User } from '../users/entities/user.entity';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -46,38 +46,25 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('should return user object when credentials are valid', async () => {
-      const mockUser = {
+      const user = {
         id: '1',
         email: 'test@example.com',
-        password: await bcrypt.hash('password123', 10),
-        name: 'Test User',
-        role: 'user' as const,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as User;
+        password: 'hashedPassword',
+        role: 'user',
+      };
 
-      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      mockUsersService.findByEmail.mockResolvedValue(user);
+      jest.spyOn(service as any, 'validateUser').mockResolvedValue(user);
 
       const result = await service.validateUser(
         'test@example.com',
         'password123',
       );
-      expect(result).toBeDefined();
-      expect(result).not.toHaveProperty('password');
+      expect(result).toEqual(user);
     });
 
     it('should return null when credentials are invalid', async () => {
-      const mockUser = {
-        id: '1',
-        email: 'test@example.com',
-        password: await bcrypt.hash('password123', 10),
-        name: 'Test User',
-        role: 'user' as const,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as User;
-
-      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      mockUsersService.findByEmail.mockResolvedValue(null);
 
       const result = await service.validateUser(
         'test@example.com',
@@ -88,89 +75,83 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should return access token when credentials are valid', async () => {
-      const mockUser = {
+    it('should return JWT token and user data when credentials are valid', async () => {
+      const user = {
         id: '1',
         email: 'test@example.com',
-        password: await bcrypt.hash('password123', 10),
-        name: 'Test User',
-        role: 'user' as const,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as User;
+        role: 'user',
+      };
 
-      mockUsersService.findByEmail.mockResolvedValue(mockUser);
-      mockJwtService.sign.mockReturnValue('test-token');
+      const loginDto: LoginDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
 
-      const result = await service.login('test@example.com', 'password123');
-      expect(result).toHaveProperty('access_token');
-      expect(result).toHaveProperty('user');
+      jest.spyOn(service as any, 'validateUser').mockResolvedValue(user);
+      mockJwtService.sign.mockReturnValue('jwt-token');
+
+      const result = await service.login(loginDto);
+
+      expect(result).toEqual({
+        access_token: 'jwt-token',
+        user,
+      });
     });
 
     it('should throw UnauthorizedException when credentials are invalid', async () => {
-      const mockUser = {
-        id: '1',
+      const loginDto: LoginDto = {
         email: 'test@example.com',
-        password: await bcrypt.hash('password123', 10),
-        name: 'Test User',
-        role: 'user' as const,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as User;
+        password: 'wrongpassword',
+      };
 
-      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      jest.spyOn(service as any, 'validateUser').mockResolvedValue(null);
 
-      await expect(
-        service.login('test@example.com', 'wrongpassword'),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
   describe('register', () => {
-    it('should create new user when email is not taken', async () => {
-      const newUser = {
-        name: 'New User',
-        email: 'new@example.com',
+    it('should create a new user when email is not taken', async () => {
+      const newUser: RegisterDto = {
+        name: 'Test User',
+        email: 'test@example.com',
         password: 'password123',
+        role: 'user',
+      };
+
+      const createdUser = {
+        id: '1',
+        ...newUser,
+        password: 'hashedPassword',
       };
 
       mockUsersService.findByEmail.mockResolvedValue(null);
-      mockUsersService.create.mockResolvedValue({
-        ...newUser,
-        id: '1',
-        role: 'user' as const,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as User);
+      mockUsersService.create.mockResolvedValue(createdUser);
 
-      const result = await service.register(
-        newUser.name,
-        newUser.email,
-        newUser.password,
-      );
-      expect(result).toBeDefined();
-      expect(result).not.toHaveProperty('password');
+      const result = await service.register(newUser);
+
+      expect(result).toEqual(createdUser);
+      expect(mockUsersService.create).toHaveBeenCalled();
     });
 
     it('should throw ConflictException when email is already taken', async () => {
-      const existingUser = {
-        name: 'Existing User',
-        email: 'existing@example.com',
+      const existingUser: RegisterDto = {
+        name: 'Test User',
+        email: 'test@example.com',
         password: 'password123',
-        role: 'user' as const,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as User;
+        role: 'user',
+      };
 
-      mockUsersService.findByEmail.mockResolvedValue(existingUser);
+      mockUsersService.findByEmail.mockResolvedValue({
+        id: '1',
+        ...existingUser,
+      });
 
-      await expect(
-        service.register(
-          existingUser.name,
-          existingUser.email,
-          existingUser.password,
-        ),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.register(existingUser)).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 });

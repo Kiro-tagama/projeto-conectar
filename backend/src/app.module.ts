@@ -1,25 +1,35 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT) || 5432,
-      username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_DATABASE || 'conecta',
-      entities: [User],
-      synchronize: process.env.NODE_ENV !== 'production',
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
-    AuthModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: +configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [User],
+        synchronize: false,
+      }),
+      inject: [ConfigService],
+    }),
     UsersModule,
+    AuthModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
