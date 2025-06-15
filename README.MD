@@ -8,22 +8,6 @@ Sistema de gerenciamento de usuários desenvolvido com NestJS (backend) e ReactJ
 
 Desenvolver uma aplicação com NestJS (backend) e ReactJS (frontend), ambos utilizando TypeScript, para gerenciar informações de usuários. O sistema deve ser robusto, seguro e fácil de usar, proporcionando uma experiência fluida tanto para administradores quanto para usuários regulares.
 
-## Entregáveis
-
-### 1. Código Fonte
-
-- Link dos repositórios Git contendo os códigos do backend e frontend
-- Instruções claras no README.md para configurar e executar a aplicação
-
-### 2. Documentação
-
-- Documentação da API (Swagger)
-- Explicação das decisões de design e arquitetura
-
-### 3. Demonstração
-
-- Diferencial: Link para uma demonstração ao vivo (ex.: deploy no Heroku, Vercel ou Netlify) com usuário e senha de acesso
-
 ## Descrição do Sistema
 
 ### 1. Gerenciamento de Usuários
@@ -37,59 +21,6 @@ Desenvolver uma aplicação com NestJS (backend) e ReactJS (frontend), ambos uti
 - Tela de login para acessar o sistema
 - Tela de cadastro para novos usuários
 - Tela de listagem de usuários (para administradores) ou perfil do usuário (para usuários regulares)
-
-## Funcionalidades Implementadas
-
-### Backend (NestJS)
-
-1. **Autenticação**
-
-   - Registro de usuários
-   - Login com JWT
-   - Proteção de rotas
-   - Controle de acesso baseado em roles
-
-2. **Gerenciamento de Usuários**
-
-   - CRUD completo de usuários
-   - Filtros por papel (admin/user)
-   - Ordenação por nome e data
-   - Listagem de usuários inativos
-   - Registro de último login
-
-3. **Segurança**
-
-   - Senhas criptografadas com bcrypt
-   - Validação de dados com class-validator
-   - Proteção contra SQL Injection
-   - Tokens JWT seguros
-
-4. **Testes**
-   - Testes unitários
-   - Testes de integração
-   - Cobertura de testes
-
-### Frontend (ReactJS)
-
-1. **Autenticação**
-
-   - Tela de login
-   - Tela de registro
-   - Gerenciamento de estado com Context API
-   - Proteção de rotas
-
-2. **Interface de Usuário**
-
-   - Dashboard para administradores
-   - Listagem de usuários com filtros
-   - Perfil do usuário
-   - Interface responsiva
-
-3. **Funcionalidades**
-   - Filtros e ordenação de usuários
-   - Edição de perfil
-   - Gerenciamento de usuários (admin)
-   - Feedback visual de ações
 
 ## Tecnologias Utilizadas
 
@@ -285,18 +216,20 @@ NODE_ENV=development
    - Documentação clara
    - Testes automatizados
 
-## Contribuição
+## Interface
 
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'feat: adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
+- Tela de login
+  | ![](mock-interface\iPhone-12-PRO-192.168.0.100.png) | ![](<mock-interface\iPhone-12-PRO-192.168.0.100(1).png>) |
+  | ---------------------------------------------------- | -------------------------------------------------------- |
 
-## Licença
+- Tela em tema claro e escuro
+  | ![](mock-interface\Oneplus-Nord-2-192.168.0.100.png) | ![](<mock-interface\iPhone-12-PRO-192.168.0.100(2).png>) |
+  | ---------------------------------------------------- | -------------------------------------------------------- |
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+- Resposividade
+  | ![](mock-interface\Macbook-Air-192.168.0.100.png) | ![](mock-interface\Galaxy-Fold2-192.168.0.100.png) |
+  | ------------------------------------------------- | -------------------------------------------------- |
 
-```
+## Notas
 
-```
+Muitas das minhas escolhas de ferramentas foram por questão de habito e praticidade

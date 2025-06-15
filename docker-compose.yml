@@ -38,6 +38,25 @@ services:
     networks:
       - conecta-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: conecta-frontend
+    ports:
+      - "4173:4173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - conecta-network
+
 networks:
   conecta-network:
     driver: bridge

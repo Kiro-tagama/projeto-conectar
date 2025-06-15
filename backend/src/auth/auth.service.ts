@@ -20,12 +20,10 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
-      console.log('Usuário não encontrado');
       return null;
     }
 
     if (!user.password || !password) {
-      console.log('Senha ou hash nulos');
       return null;
     }
 
@@ -43,29 +41,22 @@ export class AuthService {
       const { password: _, ...result } = user;
       return result;
     } catch (error) {
-      console.error('Erro ao comparar senhas:', error);
       return null;
     }
   }
 
   async login(loginDto: LoginDto) {
-    console.log('🔐 Tentativa de login para:', loginDto.email);
-
     const user = await this.validateUser(loginDto.email, loginDto.password);
     if (!user) {
-      console.log('❌ Login falhou para:', loginDto.email);
       throw new UnauthorizedException('Email ou senha inválidos');
     }
 
     // Atualiza a data do último login
     await this.usersService.update(user.id, { lastLoginAt: new Date() });
 
-    console.log('✅ Login bem-sucedido para:', user.email);
     const payload = { sub: user.id };
-    console.log('🎟️ Token payload gerado:', payload);
 
     const token = this.jwtService.sign(payload);
-    console.log('🔑 Token JWT gerado:', token);
 
     return {
       access_token: token,

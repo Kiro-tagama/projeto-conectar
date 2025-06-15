@@ -46,7 +46,6 @@ function PrivateRoute({
   }
 
   if (requireAdmin && user?.role !== "admin") {
-    console.log("Não é admin");
     return <Navigate to="/" />;
   }
 

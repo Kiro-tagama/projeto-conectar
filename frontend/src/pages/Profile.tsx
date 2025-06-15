@@ -17,7 +17,6 @@ export function Profile() {
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(user);
   useEffect(() => {
     if (user) {
       setFormData((prev) => ({

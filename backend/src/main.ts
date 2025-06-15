@@ -12,6 +12,11 @@ async function bootstrap() {
       'http://localhost:5173',
       'http://192.168.0.100:5173',
       'http://127.0.0.1:5173',
+      'http://localhost:4173',
+      'http://192.168.0.100:4173',
+      'http://127.0.0.1:4173',
+      'http://172.18.0.4:4173',
+      'http://localhost:3000',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
@@ -56,6 +61,8 @@ async function bootstrap() {
     customSiteTitle: 'Conecta API Documentation',
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000).then(() => {
+    console.log(`Server is running on port ${process.env.PORT ?? 3000}`);
+  });
 }
 bootstrap();

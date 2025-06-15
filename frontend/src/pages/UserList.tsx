@@ -5,7 +5,6 @@ import {
   type GetUsersParams,
 } from "../services/userService";
 import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import { useSearchParams } from "react-router-dom";
 import { UserModal } from "../components/UserModal";
 
@@ -13,7 +12,6 @@ export function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | undefined>();

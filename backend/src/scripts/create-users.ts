@@ -31,11 +31,7 @@ async function bootstrap() {
     // Criar ou atualizar usuário admin
     if (existingAdmin) {
       console.log('Atualizando usuário admin...');
-      const hashedPassword = await bcrypt.hash(adminUser.password, 12);
-      await usersService.update(existingAdmin.id, {
-        ...adminUser,
-        password: hashedPassword,
-      });
+      await usersService.update(existingAdmin.id, adminUser);
       console.log('Usuário admin atualizado com sucesso!');
     } else {
       console.log('Criando usuário admin...');
@@ -46,11 +42,7 @@ async function bootstrap() {
     // Criar ou atualizar usuário normal
     if (existingUser) {
       console.log('Atualizando usuário normal...');
-      const hashedPassword = await bcrypt.hash(normalUser.password, 12);
-      await usersService.update(existingUser.id, {
-        ...normalUser,
-        password: hashedPassword,
-      });
+      await usersService.update(existingUser.id, normalUser);
       console.log('Usuário normal atualizado com sucesso!');
     } else {
       console.log('Criando usuário normal...');
