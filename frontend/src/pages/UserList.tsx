@@ -164,16 +164,16 @@ export function UserList() {
         </div>
       </div>
 
-      <div className="bg-white/10 shadow-md rounded-lg overflow-hidden">
+      <div className="bg-white/5 shadow-md rounded-lg overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
           {users.map((user) => (
             <div
               key={user.id}
-              className="bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="card !p-0 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
             >
-              <div className="p-4">
+              <div className="p-3">
                 <div className="flex items-center justify-between mb-3 gap-1">
-                  <h3 className="text-lg font-semibold !text-gray-900 truncate">
+                  <h3 className="text-lg font-semibold  truncate">
                     {user.name}
                   </h3>
                   <span
