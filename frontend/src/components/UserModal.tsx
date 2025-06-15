@@ -77,7 +77,7 @@ export function UserModal({ isOpen, onClose, onSave, user }: UserModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-8 max-w-md w-full">
+      <div className="card">
         <h2 className="text-2xl font-bold mb-6">
           {user ? "Editar Usuário" : "Novo Usuário"}
         </h2>
@@ -156,7 +156,7 @@ export function UserModal({ isOpen, onClose, onSave, user }: UserModalProps) {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               >
                 <option value="user">Usuário</option>
                 <option value="admin">Admin</option>

@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    @apply bg-gray-100 text-gray-900;
+    @apply bg-gray-100 text-gray-950 dark:bg-gray-950 dark:text-gray-100;
   }
 }
 
@@ -11,14 +11,10 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: zincscale;
 }
 
 a {
@@ -44,26 +40,32 @@ h1 {
 }
 
 h2 {
-  @apply mt-6 text-center text-3xl font-extrabold text-gray-900;
+  @apply mt-6 text-center text-3xl font-extrabold;
+}
+
+h3 {
+  @apply text-lg font-medium leading-6 text-gray-950 dark:text-gray-100;
 }
 
 button {
-  @apply rounded-md border border-transparent px-3 py-2 text-base font-medium bg-gray-900 cursor-pointer transition-colors duration-200 hover:brightness-125 focus:outline-4 focus:outline-blue-500 text-gray-50 w-full;
+  @apply rounded-md border border-transparent px-3 py-2 text-base font-medium bg-gray-950 dark:bg-gray-100 cursor-pointer transition-colors duration-200 hover:brightness-125 focus:outline-4 focus:outline-blue-500 text-gray-50 dark:text-gray-950 w-full;
+}
+
+button.outline {
+  @apply border border-gray-300 dark:border-gray-700 bg-transparent text-gray-950 dark:text-gray-100;
 }
 
 input {
-  @apply w-full appearance-none block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6;
+  @apply w-full appearance-none block min-w-0 grow py-1.5 px-2 text-base text-gray-950 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none sm:text-sm/6;
+}
+input.alt {
+  @apply bg-transparent shadow dark:shadow-zinc-50/10 rounded-md;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+label {
+  @apply block text-sm font-medium text-gray-500;
+}
+
+option {
+  @apply !text-gray-950 dark:text-gray-100;
 }

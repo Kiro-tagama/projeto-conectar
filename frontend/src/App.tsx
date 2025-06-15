@@ -46,6 +46,7 @@ function PrivateRoute({
   }
 
   if (requireAdmin && user?.role !== "admin") {
+    console.log("Não é admin");
     return <Navigate to="/" />;
   }
 
@@ -90,7 +91,7 @@ function AppRoutes() {
       <Route
         path="/users"
         element={
-          <PrivateRoute requireAdmin>
+          <PrivateRoute requireAdmin={true}>
             <UserList />
           </PrivateRoute>
         }
