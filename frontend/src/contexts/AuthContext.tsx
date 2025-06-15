@@ -8,6 +8,7 @@ interface AuthContextData {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   isAuthenticated: boolean;
+  updateUser: (userData: User) => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -37,6 +38,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("@Conecta:token");
   };
 
+  const updateUser = (userData: User) => {
+    // Garante que todos os campos necessários estejam presentes
+    const updatedUser: User = {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role,
+      lastLoginAt: userData.lastLoginAt,
+      createdAt: userData.createdAt,
+      updatedAt: userData.updatedAt,
+    };
+    setUser(updatedUser);
+    localStorage.setItem("@Conecta:user", JSON.stringify(updatedUser));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -45,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signOut,
         isAuthenticated: !!user,
+        updateUser,
       }}
     >
       {children}

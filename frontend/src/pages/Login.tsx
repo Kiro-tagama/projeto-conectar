@@ -28,7 +28,7 @@ export function Login() {
   };
 
   return (
-    <div className="rounded-lg flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="card">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2>Entre na sua conta</h2>
