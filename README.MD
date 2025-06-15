@@ -38,77 +38,77 @@ Desenvolver uma aplicação com NestJS (backend) e ReactJS (frontend), ambos uti
 - Tela de cadastro para novos usuários
 - Tela de listagem de usuários (para administradores) ou perfil do usuário (para usuários regulares)
 
-## Requisitos Técnicos
+## Funcionalidades Implementadas
 
-### Backend (NestJS + TypeScript)
+### Backend (NestJS)
 
-#### 1. Autenticação de Usuários
+1. **Autenticação**
 
-- Rotas para registro (/auth/register) e login (/auth/login)
-- JWT para autenticação
-- Diferencial: Integração com provedores de login (Google/Microsoft)
+   - Registro de usuários
+   - Login com JWT
+   - Proteção de rotas
+   - Controle de acesso baseado em roles
 
-#### 2. Gerenciamento de Usuários
+2. **Gerenciamento de Usuários**
 
-```typescript
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  role: "admin" | "user";
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
+   - CRUD completo de usuários
+   - Filtros por papel (admin/user)
+   - Ordenação por nome e data
+   - Listagem de usuários inativos
+   - Registro de último login
 
-#### 3. Operações CRUD
+3. **Segurança**
 
-- CRUD completo de usuários
-- Permissões baseadas em roles
-- Filtros e ordenação
-- Endpoint para usuários inativos
+   - Senhas criptografadas com bcrypt
+   - Validação de dados com class-validator
+   - Proteção contra SQL Injection
+   - Tokens JWT seguros
 
-#### 4. Testes
+4. **Testes**
+   - Testes unitários
+   - Testes de integração
+   - Cobertura de testes
 
-- Testes unitários e de integração
+### Frontend (ReactJS)
 
-### Frontend (ReactJS + TypeScript)
+1. **Autenticação**
 
-#### 1. Telas
+   - Tela de login
+   - Tela de registro
+   - Gerenciamento de estado com Context API
+   - Proteção de rotas
 
-- Login
-- Cadastro
-- Listagem de Usuários (Admin)
-- Perfil do Usuário
+2. **Interface de Usuário**
 
-#### 2. Funcionalidades
+   - Dashboard para administradores
+   - Listagem de usuários com filtros
+   - Perfil do usuário
+   - Interface responsiva
 
-- Autenticação
-- Gerenciamento de estado
-- Interface responsiva
-- Integração com backend
+3. **Funcionalidades**
+   - Filtros e ordenação de usuários
+   - Edição de perfil
+   - Gerenciamento de usuários (admin)
+   - Feedback visual de ações
 
 ## Tecnologias Utilizadas
 
 ### Backend
 
-- Framework: NestJS com TypeScript
-- Banco de Dados: PostgreSQL
-- ORM: TypeORM
-- Autenticação: JWT
-- Documentação: Swagger
-- Docker: para containerização
-- Jest: para testes
+- NestJS com TypeScript
+- PostgreSQL
+- TypeORM
+- JWT
+- Jest
+- Swagger
 
 ### Frontend
 
-- Framework: ReactJS com TypeScript
-- Estado Global: Context API
-- Rotas: React Router
-- Estilização: TailwindCSS
-- HTTP Client: Axios
-- Vite: para desenvolvimento
+- ReactJS com TypeScript
+- Context API
+- React Router
+- TailwindCSS
+- Axios
 
 ## Pré-requisitos
 
@@ -149,6 +149,16 @@ npm install
 npm run start:dev
 ```
 
+```bash
+# cria 2 users
+npm run create-users
+```
+
+| role  | email             | password |
+| ----- | ----------------- | -------- |
+| admin | admin@example.com | 123456   |
+| user  | user@example.com  | 123456   |
+
 2. Frontend:
 
 ```bash
@@ -186,6 +196,7 @@ projeto-conectar/
 ### Usuários
 
 - `GET /users` - Listar usuários (apenas admin)
+- `GET /users/inactive` - Listar usuários inativos (apenas admin)
 - `GET /users/:id` - Obter usuário específico
 - `PUT /users/:id` - Atualizar usuário
 - `DELETE /users/:id` - Remover usuário (apenas admin)
@@ -241,6 +252,39 @@ JWT_SECRET=your-super-secret-key-change-in-production
 NODE_ENV=development
 ```
 
+## Decisões de Design e Arquitetura
+
+1. **Backend**
+
+   - Uso do NestJS para uma arquitetura modular e escalável
+   - TypeORM para mapeamento objeto-relacional
+   - JWT para autenticação stateless
+   - Validação de dados com class-validator
+   - Documentação com Swagger
+
+2. **Frontend**
+
+   - Context API para gerenciamento de estado
+   - React Router para navegação
+   - TailwindCSS para estilização
+   - Axios para requisições HTTP
+   - Componentes reutilizáveis
+
+3. **Segurança**
+
+   - Senhas criptografadas
+   - Tokens JWT com expiração
+   - Proteção de rotas
+   - Validação de dados
+   - Sanitização de inputs
+
+4. **Escalabilidade**
+   - Arquitetura modular
+   - Separação de responsabilidades
+   - Código limpo e organizado
+   - Documentação clara
+   - Testes automatizados
+
 ## Contribuição
 
 1. Faça um fork do projeto
@@ -252,3 +296,7 @@ NODE_ENV=development
 ## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+```
+
+```

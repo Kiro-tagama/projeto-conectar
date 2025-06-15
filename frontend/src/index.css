@@ -1,3 +1,11 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-gray-100 text-gray-900;
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -35,23 +43,16 @@ h1 {
   line-height: 1.1;
 }
 
+h2 {
+  @apply mt-6 text-center text-3xl font-extrabold text-gray-900;
+}
+
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  @apply rounded-md border border-transparent px-3 py-2 text-base font-medium bg-gray-900 cursor-pointer transition-colors duration-200 hover:brightness-125 focus:outline-4 focus:outline-blue-500 text-gray-50 w-full;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+input {
+  @apply w-full appearance-none block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6;
 }
 
 @media (prefers-color-scheme: light) {
