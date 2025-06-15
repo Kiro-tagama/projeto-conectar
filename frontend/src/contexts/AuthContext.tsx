@@ -44,10 +44,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: userData.id,
       name: userData.name,
       email: userData.email,
-      role: userData.role,
+      role: userData.role || user?.role || "user",
       lastLoginAt: userData.lastLoginAt,
       createdAt: userData.createdAt,
-      updatedAt: userData.updatedAt,
     };
     setUser(updatedUser);
     localStorage.setItem("@Conecta:user", JSON.stringify(updatedUser));

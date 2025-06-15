@@ -98,12 +98,13 @@ export function UserList() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold">Lista de Usuários</h1>
-      <div className="flex justify-between items-center gap-2 my-6">
-        <button onClick={handleNewUser} className="!w-auto">
-          Novo Usuário
-        </button>
+      <div className="flex justify-between items-center gap-8 my-6 flex-wrap">
+        <Link to="/" className="w-min">
+          <button className="!w-min outline">Voltar</button>
+        </Link>
+
         <div className="flex space-x-4">
-          <div>
+          <div className="flex flex-col gap-1 justify-between">
             <label
               htmlFor="role"
               className="block text-sm font-medium text-gray-700"
@@ -123,7 +124,7 @@ export function UserList() {
             </select>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-1 justify-between">
             <label
               htmlFor="sortBy"
               className="block text-sm font-medium text-gray-700"
@@ -143,7 +144,7 @@ export function UserList() {
             </select>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-1 justify-between">
             <label
               htmlFor="order"
               className="block text-sm font-medium text-gray-700"
@@ -162,6 +163,9 @@ export function UserList() {
             </select>
           </div>
         </div>
+        <button onClick={handleNewUser} className="md:!w-auto">
+          Novo Usuário
+        </button>
       </div>
 
       <div className="bg-white/5 shadow-md rounded-lg overflow-hidden">

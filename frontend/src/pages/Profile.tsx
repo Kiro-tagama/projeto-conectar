@@ -47,19 +47,28 @@ export function Profile() {
         }
       }
 
-      const updateData: any = {
-        name: formData.name,
-        email: formData.email,
-      };
+      const updateData: any = {};
+
+      if (formData.name !== user?.name) {
+        updateData.name = formData.name;
+      }
+
+      if (formData.email !== user?.email) {
+        updateData.email = formData.email;
+      }
 
       if (formData.password) {
         updateData.password = formData.password;
       }
 
-      const updatedUser = await userService.updateUser(user!.id, updateData);
-      updateUser(updatedUser);
-      setSuccess("Perfil atualizado com sucesso!");
-      setFormData((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+      if (Object.keys(updateData).length > 0) {
+        const updatedUser = await userService.updateUser(user!.id, updateData);
+        updateUser(updatedUser);
+        setSuccess("Perfil atualizado com sucesso!");
+        setFormData((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+      } else {
+        setSuccess("Nenhuma alteração foi feita.");
+      }
     } catch (error: any) {
       if (error.response?.status === 401) {
         signOut();
