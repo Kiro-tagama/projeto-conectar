@@ -32,30 +32,28 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findAll(query: any) {
-    const { page = 1, limit = 10, search = '', role } = query;
-    const skip = (page - 1) * limit;
+  async findAll(params: {
+    role?: 'user' | 'admin';
+    sortBy?: 'name' | 'email' | 'createdAt';
+    order?: 'ASC' | 'DESC';
+  }) {
+    const { role, sortBy = 'createdAt', order = 'DESC' } = params;
 
     const where: any = {};
-    if (search) {
-      where.name = Like(`%${search}%`);
-    }
     if (role) {
       where.role = role;
     }
 
     const [users, total] = await this.usersRepository.findAndCount({
       where,
-      skip,
-      take: limit,
-      order: { createdAt: 'DESC' },
+      order: {
+        [sortBy]: order,
+      },
     });
 
     return {
       data: users,
       total,
-      page: Number(page),
-      limit: Number(limit),
     };
   }
 
@@ -72,21 +70,37 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    console.log('📝 Iniciando atualização do usuário:', id);
+    console.log('📦 Dados para atualização:', updateUserDto);
+
     const user = await this.findOne(id);
 
     if (updateUserDto.email && updateUserDto.email !== user.email) {
+      console.log(
+        '📧 Verificando disponibilidade do novo email:',
+        updateUserDto.email,
+      );
       const existingUser = await this.findByEmail(updateUserDto.email);
       if (existingUser) {
+        console.log('❌ Email já está em uso');
         throw new ConflictException('Email já existe');
       }
     }
 
     if (updateUserDto.password) {
+      console.log('🔒 Atualizando senha do usuário');
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 12);
     }
 
     Object.assign(user, updateUserDto);
-    return this.usersRepository.save(user);
+    const updatedUser = await this.usersRepository.save(user);
+    console.log('✅ Usuário atualizado com sucesso:', {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      role: updatedUser.role,
+    });
+
+    return updatedUser;
   }
 
   async remove(id: string): Promise<void> {

@@ -50,6 +50,14 @@ export class User {
 
   @ApiProperty({
     example: '2024-03-15T00:00:00.000Z',
+    description: 'Data do último login do usuário',
+    nullable: true,
+  })
+  @Column({ type: 'timestamp', nullable: true })
+  lastLoginAt: Date;
+
+  @ApiProperty({
+    example: '2024-03-15T00:00:00.000Z',
     description: 'Data de criação do usuário',
   })
   @CreateDateColumn()

@@ -17,17 +17,12 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    console.log('Validando usuário:', email);
     const user = await this.usersService.findByEmail(email);
-    console.log('Usuário encontrado:', user);
 
     if (!user) {
       console.log('Usuário não encontrado');
       return null;
     }
-
-    console.log('Senha recebida:', password);
-    console.log('Hash armazenado:', user.password);
 
     if (!user.password || !password) {
       console.log('Senha ou hash nulos');
@@ -40,10 +35,8 @@ export class AuthService {
         password.toString(),
         user.password,
       );
-      console.log('Senha válida:', isPasswordValid);
 
       if (!isPasswordValid) {
-        console.log('Senha inválida');
         return null;
       }
 
@@ -56,25 +49,31 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    console.log('Tentando login:', loginDto.email);
-    const user = await this.validateUser(loginDto.email, loginDto.password);
-    console.log('Resultado da validação:', user);
+    console.log('🔐 Tentativa de login para:', loginDto.email);
 
+    const user = await this.validateUser(loginDto.email, loginDto.password);
     if (!user) {
+      console.log('❌ Login falhou para:', loginDto.email);
       throw new UnauthorizedException('Email ou senha inválidos');
     }
 
-    const payload = { email: user.email, sub: user.id, role: user.role };
-    console.log('Login bem-sucedido para:', user.email);
+    // Atualiza a data do último login
+    await this.usersService.update(user.id, { lastLoginAt: new Date() });
+
+    console.log('✅ Login bem-sucedido para:', user.email);
+    const payload = { sub: user.id };
+    console.log('🎟️ Token payload gerado:', payload);
+
+    const token = this.jwtService.sign(payload);
+    console.log('🔑 Token JWT gerado:', token);
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: token,
       user,
     };
   }
 
   async register(registerDto: RegisterDto) {
-    console.log('Tentando registro:', registerDto.email);
     const existingUser = await this.usersService.findByEmail(registerDto.email);
 
     if (existingUser) {
@@ -83,8 +82,6 @@ export class AuthService {
 
     const user = await this.usersService.create(registerDto);
 
-    console.log('Senha hasheada:', user.password);
-    console.log('Usuário criado:', user.email);
     return user;
   }
 }

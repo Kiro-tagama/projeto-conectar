@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -58,66 +60,33 @@ export class UsersController {
   @Roles('admin')
   @ApiOperation({ summary: 'Listar todos os usuários' })
   @ApiQuery({
-    name: 'page',
-    required: false,
-    type: Number,
-    description: 'Número da página',
-  })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-    type: Number,
-    description: 'Itens por página',
-  })
-  @ApiQuery({
-    name: 'search',
-    required: false,
-    type: String,
-    description: 'Termo de busca',
-  })
-  @ApiQuery({
     name: 'role',
     required: false,
     type: String,
     description: 'Filtrar por papel (user/admin)',
   })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    type: String,
+    description: 'Campo para ordenação (name/email/createdAt)',
+  })
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    type: String,
+    description: 'Ordem da ordenação (ASC/DESC)',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de usuários retornada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: {
-                type: 'string',
-                example: '123e4567-e89b-12d3-a456-426614174000',
-              },
-              name: { type: 'string', example: 'John Doe' },
-              email: { type: 'string', example: 'user@example.com' },
-              role: { type: 'string', example: 'user' },
-              createdAt: {
-                type: 'string',
-                example: '2024-03-15T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2024-03-15T00:00:00.000Z',
-              },
-            },
-          },
-        },
-        total: { type: 'number', example: 10 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 10 },
-      },
-    },
   })
-  findAll(@Query() query: any) {
-    return this.usersService.findAll(query);
+  findAll(
+    @Query('role') role?: 'user' | 'admin',
+    @Query('sortBy') sortBy?: 'name' | 'email' | 'createdAt',
+    @Query('order') order?: 'ASC' | 'DESC',
+  ) {
+    return this.usersService.findAll({ role, sortBy, order });
   }
 
   @Get(':id')
@@ -144,7 +113,6 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @Roles('admin')
   @ApiOperation({ summary: 'Atualizar usuário' })
   @ApiResponse({
     status: 200,
@@ -164,7 +132,25 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   @ApiResponse({ status: 409, description: 'Email já existe' })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Request() req,
+  ) {
+    // Se não for admin, só pode atualizar seus próprios dados
+    if (req.user.role !== 'admin' && req.user.id !== id) {
+      throw new ForbiddenException(
+        'Você não tem permissão para atualizar este usuário',
+      );
+    }
+
+    // Se não for admin, não pode alterar a role
+    if (req.user.role !== 'admin' && updateUserDto.role) {
+      throw new ForbiddenException(
+        'Você não tem permissão para alterar a role',
+      );
+    }
+
     return this.usersService.update(id, updateUserDto);
   }
 

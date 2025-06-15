@@ -5,6 +5,7 @@ import {
   MinLength,
   IsOptional,
   IsEnum,
+  IsDate,
 } from 'class-validator';
 
 export class UpdateUserDto {
@@ -47,4 +48,13 @@ export class UpdateUserDto {
   @IsEnum(['user', 'admin'])
   @IsOptional()
   role?: 'user' | 'admin';
+
+  @ApiProperty({
+    example: '2024-03-15T00:00:00.000Z',
+    description: 'Data do último login do usuário',
+    required: false,
+  })
+  @IsDate()
+  @IsOptional()
+  lastLoginAt?: Date;
 }
