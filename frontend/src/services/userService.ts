@@ -1,12 +1,5 @@
 import { api } from "./api";
 
-const API_URL = "http://localhost:3000";
-
-const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
-
 export interface User {
   id: string;
   name: string;
@@ -64,6 +57,11 @@ class UserService {
 
   async deleteUser(id: string): Promise<void> {
     await api.delete(`/users/${id}`);
+  }
+
+  async getInactiveUsers(): Promise<GetUsersResponse> {
+    const response = await api.get("/users/inactive");
+    return response.data;
   }
 }
 

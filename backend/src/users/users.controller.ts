@@ -162,4 +162,15 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  @Get('inactive')
+  @Roles('admin')
+  @ApiOperation({ summary: 'Listar usuários inativos nos últimos 30 dias' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuários inativos retornada com sucesso',
+  })
+  findInactive() {
+    return this.usersService.findInactiveUsers();
+  }
 }

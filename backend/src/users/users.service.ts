@@ -4,7 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like, LessThan } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -70,35 +70,21 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    console.log('📝 Iniciando atualização do usuário:', id);
-    console.log('📦 Dados para atualização:', updateUserDto);
-
     const user = await this.findOne(id);
 
     if (updateUserDto.email && updateUserDto.email !== user.email) {
-      console.log(
-        '📧 Verificando disponibilidade do novo email:',
-        updateUserDto.email,
-      );
       const existingUser = await this.findByEmail(updateUserDto.email);
       if (existingUser) {
-        console.log('❌ Email já está em uso');
         throw new ConflictException('Email já existe');
       }
     }
-
+    console.log('updateUserDto.password ' + updateUserDto.password);
     if (updateUserDto.password) {
-      console.log('🔒 Atualizando senha do usuário');
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 12);
     }
 
     Object.assign(user, updateUserDto);
     const updatedUser = await this.usersRepository.save(user);
-    console.log('✅ Usuário atualizado com sucesso:', {
-      id: updatedUser.id,
-      email: updatedUser.email,
-      role: updatedUser.role,
-    });
 
     return updatedUser;
   }
@@ -106,5 +92,22 @@ export class UsersService {
   async remove(id: string): Promise<void> {
     const user = await this.findOne(id);
     await this.usersRepository.remove(user);
+  }
+
+  async findInactiveUsers() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const [users, total] = await this.usersRepository.findAndCount({
+      where: [{ lastLoginAt: LessThan(thirtyDaysAgo) }, { lastLoginAt: null }],
+      order: {
+        lastLoginAt: 'ASC',
+      },
+    });
+
+    return {
+      data: users,
+      total,
+    };
   }
 }
