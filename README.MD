@@ -58,17 +58,16 @@ git clone [URL_DO_REPOSITÓRIO]
 cd projeto-conectar
 ```
 
-2. Configure as variáveis de ambiente:
-
-```bash
-cp backend/.env.example backend/.env
-```
-
-3. Inicie os containers:
+2. Inicie os containers:
 
 ```bash
 docker-compose up -d
 ```
+
+Observações:
+- Ao iniciar o Docker, os containers do backend, frontend e banco de dados PostgreSQL serão iniciados automaticamente.
+- O processo também irá adicionar ou atualizar dois usuários específicos mencionados a seguir.
+- O frontend estará disponível no endereço http://localhost:4173 (porta 4173).
 
 ### Configuração Manual
 
@@ -226,10 +225,16 @@ NODE_ENV=development
   | ![](mock-interface\Oneplus-Nord-2-192.168.0.100.png) | ![](<mock-interface\iPhone-12-PRO-192.168.0.100(2).png>) |
   | ---------------------------------------------------- | -------------------------------------------------------- |
 
-- Resposividade
+- Responsividade
   | ![](mock-interface\Macbook-Air-192.168.0.100.png) | ![](mock-interface\Galaxy-Fold2-192.168.0.100.png) |
   | ------------------------------------------------- | -------------------------------------------------- |
 
 ## Notas
 
-Muitas das minhas escolhas de ferramentas foram por questão de habito e praticidade
+Muitas das minhas escolhas foram baseadas em hábitos e nas ferramentas que uso no meu dia a dia.
+O estilo minimalista reflete uma preferência pessoal, pois traz conforto e facilidade de uso, além de ser uma escolha simples que facilita a aceitação por outras pessoas.
+
+No backend, utilizei ferramentas como JWT, Swagger, PostgreSQL e Docker, tanto por hábito quanto por serem escolhas práticas e simples de implementar.
+A arquitetura do backend segue o padrão modular, com a pasta src/auth/ contendo controllers, modules, services, DTOs e outros arquivos relacionados ao JWT, seguindo conceitos do padrão MVC (Model-View-Controller) e da arquitetura em camadas.
+
+No frontend, organizei o código seguindo uma arquitetura baseada em pastas funcionais: services, pages, context e components. Para o gerenciamento de estado, usei o próprio useContext do React, pela familiaridade e simplicidade dessa abordagem, que se encaixa no padrão de context API do React.
